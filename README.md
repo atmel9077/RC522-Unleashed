@@ -20,13 +20,13 @@ There are yet major limitations to this library :
     -Complex samples are converted into real samples.  
     -The signal is lowpass-filtered and discretized to binary levels.  
     -The discretized signal is decoded into bits and bytes  
-- **The sampling rate is lower than the tag's subcarrier frequency (230.9 vs 423kHz)** Thus, only the less robust DC component of the modulated data is recivered.
+- **The sampling rate is lower than the tag's subcarrier frequency (230.9 vs 423kHz)** Thus, only the less robust DC component of the modulated data is recovered.
 - The sample rate is a compromise between signal quality and RAM occupancy. **Note that the SPI bus speed is set to 2Mbps/250KBps when transceiving, but the lack of double-buffering in the ATMEGA328P results in the odd and ugly 230.9ksps sample rate**
 
 ## Communication parameters
 
 - Reader to card
-  - Only HIGH data rate is supported (26.27kbps, 1 out of 4 coding)  
+  - Only HIGH data rate is supported (26.67kbps, 1 out of 4 coding)  
   - Only 100% modulation index is supported (had no luck with 10%)  
 - Card to reader
   - Only HIGH data rate is supported (26.67kbps)  
