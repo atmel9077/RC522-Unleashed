@@ -26,11 +26,11 @@ There are yet major limitations to this library :
 ## Communication parameters
 
 - Reader to card
-  -Only HIGH data rate is supported (26.27kbps, 1 out of 4 coding)  
-  -Only 100% modulation index is supported (had no luck with 10%)  
+  - Only HIGH data rate is supported (26.27kbps, 1 out of 4 coding)  
+  - Only 100% modulation index is supported (had no luck with 10%)  
 - Card to reader
-  -Only HIGH data rate is supported (26.67kbps)  
-  -Only signle subcarrier is supported  
+  - Only HIGH data rate is supported (26.67kbps)  
+  - Only signle subcarrier is supported  
 - Transceive length : The recommended 1280-byte DSP buffer allows to ttransmit/receive 17 bytes (enough for an INVENTORY cmd)
 
 ## Supported commands
