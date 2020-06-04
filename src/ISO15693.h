@@ -77,19 +77,20 @@ class ISO15693
 		SUBCARRIER_FLAG 		= 0b00000001,//Do not set this flag, as only one subcarrier is supported
 		DATA_RATE_FLAG 			= 0b00000010,//Don't forget to set this flag when manually sending a command, as only high data rate is supported !
 		INVENTORY_FLAG 			= 0b00000100,//Shall be set whne sending an INVENTORY command
-		PROTOCOL_EXTENSION_FLAG = 0b00001000,
+		PROTOCOL_EXTENSION_FLAG = 0b00001000,//RFU
 		
 		SELECT_FLAG 			= 0b00010000,//If set, command will only be executed by the tag in SELECTED state.
 		ADDRESS_FLAG 			= 0b00100000,//If set, only tag whose UID is included after the command will execute the command
-		OPTION_FLAG 			= 0b01000000,
-		RFU_FLAG 				= 0b10000000,
+		OPTION_FLAG 			= 0b01000000,//Meaning is defined by the command
+		RFU_FLAG 				= 0b10000000,//RFU (Reserved for Future use)
 		
-		AFI_FLAG				= 0b00010000,
-		NB_SLOTS_FLAG			= 0b00100000
+		AFI_FLAG				= 0b00010000,//When the INVENTORY flag is set, the AFI flag signals that anly tags whose AFI matches the specified AFI shall respond. (Not used in this library).
+		NB_SLOTS_FLAG			= 0b00100000//When the inventory flag is set, this flag signals that can only respond within 1 time slot, that is, right after the command has been set.
 	};
 	
 	ISO15693(MFRC522 *rfid, byte DSPBuffer [], int DSPBufferLength);//Constructor
 	
+	//Internally used.
 	void generateRXBuffer(byte buf [], int len);
 	
 	void transferBuffer(byte buffer [], int len);
@@ -121,32 +122,32 @@ class ISO15693
 	
 	int transceive15693(byte buffer [], int bufferLength, int bytesToTransmit, bool receiveLater = false);
 	
-	bool inventory(byte uid [8]);
-	bool readSingleBlock(byte blockNumber, byte data [4]);
-	bool writeSingleBlock(byte blockNumber, byte data [4]);
-	bool select(byte uid [8]);
-	bool resetToReady();
+	//Predefined commands.
+	bool inventory(byte uid [8]);//Returns true and copies the UID in reversed order into UID if a tag is within the reader's range.
+	bool readSingleBlock(byte blockNumber, byte data [4]);//Returns true if a block has successfully been read and copies 4 bytes into the data array. Only tags in SELECTED mode will respond to this command.
+	bool writeSingleBlock(byte blockNumber, byte data [4]);//Writes 4 bytes into block blockNumber and returns true if successful. Only tags in SELECTED mode will respond to this command.
+	bool select(byte uid [8]);//Returns true if a card whose UID matches the uid array has been selected. (UID is in reversed order as for the INVENTORY command).
+	bool resetToReady();//returns true if a tag in the SELECTED state has successfully been unselected.
 	
-	bool tagError();
-	byte getErrorCode();
+	bool tagError();//Returns true if a tag responded with an error to the last command.
+	byte getErrorCode();//Get the last error code that has been returned by a tag.
 	
 	private:
-	byte *_DSPBuffer;
-	int _DSPBufferLength;
+	byte *_DSPBuffer;//Unified signal processing buffer, divided between the Transmit and Receive buffers.
+	int _DSPBufferLength;//Length of the unified DSP buffer
 	
-	int _txLength;
-	int _rxLength;
-	byte *_rxBuffer;
+	//These have been defined as member variables only to facilitate debug.
+	int _txLength;//Length of the TX buffer
+	int _rxLength;//Length of the RX buffer
+	byte *_rxBuffer;//Pointer ot the beginning of the RX buffer.
 	
-	const int _INTBUFLEN = 32;
+	const int _INTBUFLEN = 32;//Internal command transceiving buffer.
 	byte _internalBuffer [32];
 	
-	MFRC522 *_rfid;
-	
-	byte _UID [8];
-	
-	bool _tagError = false;
-	byte _errorCode = 0x00;
+	MFRC522 *_rfid;//RC522 object.
+		
+	bool _tagError = false;//Set to true if  a tag responded to the last request with an error
+	byte _errorCode = 0x00;//Contains the last error code which has been received.
 };
 
 #endif
