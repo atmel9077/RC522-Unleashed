@@ -428,7 +428,7 @@ bool ISO15693::readSingleBlock(byte blockNumber, byte data [4])//Returns true an
 	return success;
 }
 
-bool ISO15693::writeSingleBlock(byte blockNumber, byte data [4]);//Tries to write 4 data bytes in block blockNumber, returns true if the tag reports that the data has successfully been writen. WARNING : If the reader fails to receive the tag's response, it will return false although data has actually been written to the tag.
+bool ISO15693::writeSingleBlock(byte blockNumber, byte data [4])//Tries to write 4 data bytes in block blockNumber, returns true if the tag reports that the data has successfully been writen. WARNING : If the reader fails to receive the tag's response, it will return false although data has actually been written to the tag.
 {
 	bool success = false;
 	
@@ -503,7 +503,7 @@ bool ISO15693::resetToReady()//Returns true if the tag which was in the SELECTED
 	
 	_tagError = false;
 	
-	_internalBuffer[0] = DATA_RATE_FLAG | SELECT_FLAG;/High data rate, Address_flag means only the tag whose address matches the transmitted address shall respond.
+	_internalBuffer[0] = DATA_RATE_FLAG | SELECT_FLAG;//High data rate, Address_flag means only the tag whose address matches the transmitted address shall respond.
 	_internalBuffer[1] = RESET_TO_READY_CMD;
 	
 	if(transceive15693(_internalBuffer, _INTBUFLEN, 2) == 1)///Transmit request and try to receive response
